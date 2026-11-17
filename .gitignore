@@ -1,0 +1,9 @@
+# File upload produk tidak perlu masuk repository
+assets/uploads/products/*
+
+# Tapi folder upload tetap dijaga
+!assets/uploads/products/.gitkeep
+
+# File sistem
+.DS_Store
+Thumbs.db
