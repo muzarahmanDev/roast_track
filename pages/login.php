@@ -49,7 +49,7 @@ $pageTitle = 'Login';
         <div class="card shadow">
             <div class="card-body p-4">
                 <h3 class="text-center mb-1">☕ RoastTrack</h3>
-                <p class="text-center text-muted mb-4">POS Coffee Shop</p>
+                <p class="text-center text-muted mb-4">Kyla Coffee Shop</p>
 
                 <?php if (isset($_GET['error']) && $_GET['error'] == 1): ?>
                     <div class="alert alert-danger">

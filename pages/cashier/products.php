@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * =====================================================
  * File    : products.php
@@ -10,36 +10,41 @@
  */
 
 require_once __DIR__ . '/../../includes/auth_check.php';
-require_once __DIR__ . '/../../includes/functions.php'; 
+require_once __DIR__ . '/../../includes/functions.php';
 
-requireRole('cashier'); 
+// Baris WAJIB di semua halaman terproteksi (Bab 6.1)
+requireRole('cashier');
 
+// Query: ambil semua menu beserta nama kategorinya
+// JOIN categories : butuh nama kategori untuk ditampilkan di tabel
+// ORDER BY name   : urutkan alfabetis agar kasir cepat mencari
 $sql = "SELECT p.*, c.name AS category_name
         FROM products p
         JOIN categories c ON p.category_id = c.id
-        ORDER BY p.name ASC"; 
+        ORDER BY p.name ASC";
+$products = $pdo->query($sql)->fetchAll();
 
-$products = $pdo->query($sql)->fetchAll(); 
+// Query: ambil daftar kategori untuk isi dropdown form
+$categories = $pdo->query("SELECT id, name FROM categories ORDER BY name ASC")->fetchAll();
 
-$products = $pdo->query("SELECT id, name FROM categories ORDER BY name ASC")->fetchAll(); 
-
-$edit = null; 
+// Mode edit: jika URL mengandung ?edit=ID, muat data menu ke form
+$edit = null;
 if (isset($_GET['edit'])) {
     $stmt = $pdo->prepare("SELECT * FROM products WHERE id = :id LIMIT 1");
     $stmt->execute(['id' => (int)$_GET['edit']]);
     $edit = $stmt->fetch();
 }
 
-$pageTitle = 'Menu'; 
-require_once __DIR__ . '/../../includes/header.php'; 
+$pageTitle = 'Menu';
+require_once __DIR__ . '/../../includes/header.php';
 ?>
 
-<?php $flash = getFlash(); if ($flash): ?> 
-<div class="alert alert-<?= e($flash['type']) ?> alert-dismissible fade show" role="alert">
+<?php $flash = getFlash(); if ($flash): ?>
+    <div class="alert alert-<?= e($flash['type']) ?> alert-dismissible fade show" role="alert">
         <?= e($flash['message']) ?>
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
-<?php endif; ?> 
+<?php endif; ?>
 
 <div class="row">
     <!-- Kolom form tambah / edit menu -->
