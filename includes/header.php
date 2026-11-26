@@ -2,7 +2,7 @@
 /**
  * =====================================================
  * File    : header.php
- * Fungsi  : Template bagian atas HTML dan navbar
+ * Fungsi  : Template bagian atas HTML dan navbar sesuai role
  * Project : POS Coffee Shop (Project 2)
  * Author  : Muhammad Zaky Rahman
  * Depends : db_connect.php, functions.php
@@ -14,6 +14,9 @@ require_once __DIR__ . '/functions.php';
 
 // Judul halaman bisa dikirim dari halaman pemanggil
 $pageTitle = $pageTitle ?? 'RoastTrack';
+
+// Role aktif untuk menentukan link navbar (Bab 5: navbar menyesuaikan role)
+$currentRole = $_SESSION['role'] ?? '';
 ?>
 <!doctype html>
 <html lang="id">
@@ -30,23 +33,30 @@ $pageTitle = $pageTitle ?? 'RoastTrack';
 </head>
 <body class="bg-light">
 
-<nav class="navbar navbar-dark bg-dark">
+<nav class="navbar navbar-expand navbar-dark bg-dark">
     <div class="container">
         <span class="navbar-brand fw-bold">☕ RoastTrack</span>
 
-        <div class="d-flex align-items-center gap-3">
-            <?php if (!empty($_SESSION['name'])): ?>
-                <span class="text-light"><?= e($_SESSION['name']) ?></span>
-                <span class="badge text-bg-secondary"><?= e($_SESSION['role']) ?></span>
-            <?php endif; ?>
+        <?php if (!empty($_SESSION['user_id'])): ?>
+            <ul class="navbar-nav me-auto">
+                <?php if ($currentRole === 'cashier'): ?>
+                    <!-- Link khusus kasir -->
+                    <li class="nav-item"><a class="nav-link" href="<?= e(BASE_URL) ?>/pages/cashier/dashboard.php">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?= e(BASE_URL) ?>/pages/cashier/products.php">Menu</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?= e(BASE_URL) ?>/pages/cashier/categories.php">Kategori</a></li>
+                <?php elseif ($currentRole === 'kitchen'): ?>
+                    <!-- Link khusus dapur -->
+                    <li class="nav-item"><a class="nav-link" href="<?= e(BASE_URL) ?>/pages/kitchen/display.php">Display</a></li>
+                <?php endif; ?>
+            </ul>
 
-            <?php if (!empty($_SESSION['user_id'])): ?>
-                <a class="btn btn-outline-light btn-sm" href="<?= e(BASE_URL) ?>/process/logout_process.php">
-                    Logout
-                </a>
-            <?php endif; ?>
-        </div>
+            <div class="d-flex align-items-center gap-3">
+                <span class="text-light"><?= e($_SESSION['name'] ?? '') ?></span>
+                <span class="badge text-bg-secondary"><?= e($currentRole) ?></span>
+                <a class="btn btn-outline-light btn-sm" href="<?= e(BASE_URL) ?>/process/logout_process.php">Logout</a>
+            </div>
+        <?php endif; ?>
     </div>
 </nav>
 
-<main class="container py-4"></main>
+<main class="container py-4"> 

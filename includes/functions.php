@@ -62,3 +62,33 @@ function generateOrderNumber($pdo)
     // Gabungkan prefix dengan nomor urut 4 digit, contoh: 0001
     return $prefix . str_pad((string)$nextNumber, 4, '0', STR_PAD_LEFT);
 }
+
+
+/**
+ * Simpan pesan flash ke session (sekali pakai)
+ * @param string $type Kelas alert Bootstrap: 'success', 'danger', 'warning'
+ * @param string $message Pesan yang ingin ditampilkan
+ * @return void
+ * Cara kerja: pesan disimpan di session, diambil & dihapus oleh halaman tujuan
+ */
+function setFlash($type, $message)
+{
+    $_SESSION['flash'] = [
+        'type'    => $type,
+        'message' => $message,
+    ];
+}
+
+/**
+ * Ambil lalu hapus pesan flash dari session
+ * @return array|null Array ['type','message'] atau null jika tidak ada
+ */
+function getFlash()
+{
+    if (!empty($_SESSION['flash'])) {
+        $flash = $_SESSION['flash'];
+        unset($_SESSION['flash']);
+        return $flash;
+    }
+    return null;
+}

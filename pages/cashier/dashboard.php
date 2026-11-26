@@ -2,34 +2,65 @@
 /**
  * =====================================================
  * File    : dashboard.php
- * Fungsi  : Dashboard awal kasir
+ * Fungsi  : Dashboard kasir: grid menu tersedia dengan gambar
  * Project : POS Coffee Shop (Project 2)
  * Author  : Muhammad Zaky Rahman
- * Depends : auth_check.php, header.php, footer.php
+ * Depends : auth_check.php, functions.php, header.php, footer.php
  * =====================================================
  */
 
 require_once __DIR__ . '/../../includes/auth_check.php';
+require_once __DIR__ . '/../../includes/functions.php';
 
-// Halaman ini hanya boleh diakses oleh kasir
+// Baris WAJIB di semua halaman terproteksi (Bab 6.1)
 requireRole('cashier');
 
-$pageTitle = 'Dashboard Kasir';
+// Query: ambil menu yang tersedia untuk ditampilkan di grid kasir
+// JOIN categories  : butuh nama kategori untuk label badge di kartu menu
+// WHERE is_available=1 : menu yang disembunyikan tidak boleh muncul
+// ORDER BY name    : urutkan alfabetis agar kasir cepat mencari
+$sql = "SELECT p.*, c.name AS category_name
+        FROM products p
+        JOIN categories c ON p.category_id = c.id
+        WHERE p.is_available = 1
+        ORDER BY p.name ASC";
+$products = $pdo->query($sql)->fetchAll();
 
+$pageTitle = 'Dashboard Kasir';
 require_once __DIR__ . '/../../includes/header.php';
 ?>
 
-<div class="alert alert-success">
-    Dashboard kasir berhasil diakses. Fase 1 login multi-role berjalan.
-</div>
-
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">Menu Kasir</h5>
-        <p class="text-muted mb-0">
-            Halaman ini nanti akan menampilkan grid menu kopi untuk membuat pesanan.
-        </p>
+<?php $flash = getFlash(); if ($flash): ?>
+    <div class="alert alert-<?= e($flash['type']) ?> alert-dismissible fade show" role="alert">
+        <?= e($flash['message']) ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
+<?php endif; ?>
+
+<h4 class="mb-3">Menu Tersedia</h4>
+
+<?php if (!$products): ?>
+    <div class="alert alert-info">
+        Belum ada menu yang tampil. Tambahkan lewat halaman <strong>Menu</strong> di navbar.
+    </div>
+<?php endif; ?>
+
+<!-- Grid kartu menu; tombol keranjang menyusul di Fase 3 -->
+<div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
+    <?php foreach ($products as $p): ?>
+        <div class="col">
+            <div class="card card-menu shadow-sm h-100">
+                <img src="<?= e(BASE_URL) ?>/assets/uploads/products/<?= e($p['image']) ?>"
+                     class="card-img-top" alt="<?= e($p['name']) ?>">
+                <div class="card-body">
+                    <h6 class="card-title mb-1"><?= e($p['name']) ?></h6>
+                    <span class="badge text-bg-secondary mb-2"><?= e($p['category_name']) ?></span>
+                    <div class="fw-bold"><?= e(formatRupiah($p['price'])) ?></div>
+                    <small class="text-muted">Stok: <?= (int)$p['stock'] ?></small>
+                </div>
+            </div>
+        </div>
+    <?php endforeach; ?>
 </div>
 
 <?php require_once __DIR__ . '/../../includes/footer.php'; ?>

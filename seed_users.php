@@ -26,6 +26,12 @@ $users = [
         'role'     => 'kitchen',
         'name'     => 'Tim Dapur',
     ],
+    [
+        'username' => 'pemilik',
+        'password' => 'owner123', 
+        'role'     => 'kitchen', 
+        'name'     => 'Tim Dapur', 
+    ], 
 ];
 
 echo '<pre>';

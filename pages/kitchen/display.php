@@ -19,9 +19,10 @@ $pageTitle = 'Kitchen Display';
 require_once __DIR__ . '/../../includes/header.php';
 ?>
 
-<div class="alert alert-info">
-    Kitchen display berhasil diakses. Fase 1 login multi-role berjalan.
+<div class="alert alert-success" onclick="this.style.display='none'" style="cursor: pointer;" title="Klik untuk menutup">
+    Dashboard kasir berhasil diakses. Fase 1 login multi-role berjalan.
 </div>
+
 
 <div class="card">
     <div class="card-body">
