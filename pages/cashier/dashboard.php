@@ -2,7 +2,7 @@
 /**
  * =====================================================
  * File    : dashboard.php
- * Fungsi  : Dashboard kasir: grid menu tersedia dengan gambar
+ * Fungsi  : Dashboard kasir: grid menu + tombol tambah ke keranjang
  * Project : POS Coffee Shop (Project 2)
  * Author  : Muhammad Zaky Rahman
  * Depends : auth_check.php, functions.php, header.php, footer.php
@@ -45,7 +45,6 @@ require_once __DIR__ . '/../../includes/header.php';
     </div>
 <?php endif; ?>
 
-<!-- Grid kartu menu; tombol keranjang menyusul di Fase 3 -->
 <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
     <?php foreach ($products as $p): ?>
         <div class="col">
@@ -56,8 +55,29 @@ require_once __DIR__ . '/../../includes/header.php';
                     <h6 class="card-title mb-1"><?= e($p['name']) ?></h6>
                     <span class="badge text-bg-secondary mb-2"><?= e($p['category_name']) ?></span>
                     <div class="fw-bold"><?= e(formatRupiah($p['price'])) ?></div>
-                    <small class="text-muted">Stok: <?= (int)$p['stock'] ?></small>
+
+                    <?php if ((int)$p['stock'] > 0): ?>
+                        <small class="text-muted">Stok: <?= (int)$p['stock'] ?></small>
+                    <?php else: ?>
+                        <small><span class="badge text-bg-danger">Stok habis</span></small>
+                    <?php endif; ?>
                 </div>
+
+                <!-- Form tambah ke keranjang: POST murni, tanpa JS, agar andal -->
+                <form method="post"
+                      action="<?= e(BASE_URL) ?>/process/cart_process.php"
+                      class="px-3 pb-3">
+                    <input type="hidden" name="action" value="add">
+                    <input type="hidden" name="redirect" value="dashboard">
+                    <input type="hidden" name="product_id" value="<?= (int)$p['id'] ?>">
+                    <input type="hidden" name="qty" value="1">
+
+                    <button type="submit"
+                            class="btn btn-primary btn-sm w-100"
+                            <?= ((int)$p['stock'] > 0) ? '' : 'disabled' ?>>
+                        + Keranjang
+                    </button>
+                </form>
             </div>
         </div>
     <?php endforeach; ?>

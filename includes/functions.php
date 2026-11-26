@@ -92,3 +92,15 @@ function getFlash()
     }
     return null;
 }
+
+/**
+ * Hitung total item di keranjang session
+ * @return int Jumlah seluruh qty di keranjang
+ * Cara kerja: menjumlahkan nilai array $_SESSION['cart']
+ *             yang berbentuk [product_id => qty]
+ */
+function cartCount()
+{
+    return array_sum($_SESSION['cart'] ?? []);
+}
+

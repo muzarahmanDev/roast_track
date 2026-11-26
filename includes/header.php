@@ -17,6 +17,9 @@ $pageTitle = $pageTitle ?? 'RoastTrack';
 
 // Role aktif untuk menentukan link navbar (Bab 5: navbar menyesuaikan role)
 $currentRole = $_SESSION['role'] ?? '';
+
+// Jumlah item keranjang untuk badge di navbar (khusus kasir)
+$cartCount = cartCount();
 ?>
 <!doctype html>
 <html lang="id">
@@ -44,6 +47,14 @@ $currentRole = $_SESSION['role'] ?? '';
                     <li class="nav-item"><a class="nav-link" href="<?= e(BASE_URL) ?>/pages/cashier/dashboard.php">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link" href="<?= e(BASE_URL) ?>/pages/cashier/products.php">Menu</a></li>
                     <li class="nav-item"><a class="nav-link" href="<?= e(BASE_URL) ?>/pages/cashier/categories.php">Kategori</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= e(BASE_URL) ?>/pages/cashier/cart.php">
+                            Keranjang
+                            <?php if ($cartCount > 0): ?>
+                                <span class="badge text-bg-warning"><?= (int)$cartCount ?></span>
+                            <?php endif; ?>
+                        </a>
+                    </li>
                 <?php elseif ($currentRole === 'kitchen'): ?>
                     <!-- Link khusus dapur -->
                     <li class="nav-item"><a class="nav-link" href="<?= e(BASE_URL) ?>/pages/kitchen/display.php">Display</a></li>
@@ -59,4 +70,4 @@ $currentRole = $_SESSION['role'] ?? '';
     </div>
 </nav>
 
-<main class="container py-4"> 
+<main class="container py-4">
