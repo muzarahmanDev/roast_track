@@ -55,6 +55,7 @@ $cartCount = cartCount();
                             <?php endif; ?>
                         </a>
                     </li>
+                    <li class="nav-item"><a class="nav-link" href="<?= e(BASE_URL) ?>/pages/cashier/active_orders.php">Pesanan Aktif</a></li>
                 <?php elseif ($currentRole === 'kitchen'): ?>
                     <!-- Link khusus dapur -->
                     <li class="nav-item"><a class="nav-link" href="<?= e(BASE_URL) ?>/pages/kitchen/display.php">Display</a></li>

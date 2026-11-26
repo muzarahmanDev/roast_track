@@ -111,7 +111,7 @@ $details = $detailStmt->fetchAll();
     </div>
     <hr>
 
-    <div class="text-center">Terima kasih!<br>Status: <?= e(strtoupper($order['status'])) ?></div>
+    <div class="text-center">Terima kasih! sudah berkunjung di kyla coffe shop, kami tunggu kedatangannya kembali 😊<br><br>Status: <?= e(strtoupper($order['status'])) ?></div>
 </div>
 
 </body>
